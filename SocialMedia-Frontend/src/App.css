@@ -30,22 +30,39 @@
   filter: blur(72px)
 }
 
-.button{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  border:none;
-  border-radius: 0.5rem;
-  background: var(--buttonBg);
-  transition:all 100ms ease-out;
+.blur{
+  position: absolute;
+  width: 22rem;
+  height: 14rem;
+  background: #a6ddf0;
+  border-radius: 50%;
+  filter: blur(72px);
 }
-
-.button:hover{
+.button {
+  background: var(--buttonBg);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  color: var(--orange);
+  transition: all 100ms ease-out;
+}
+.button:disabled{
+  background: silver;
+  cursor: not-allowed;
+}
+.button:hover {
   background: transparent;
   border: 2px solid var(--orange);
+  color: var(--orange);
+}
+
+.button:active {
+  background: transparent;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
 }
 
 ::-webkit-scrollbar{
