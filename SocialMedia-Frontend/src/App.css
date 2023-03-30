@@ -50,7 +50,7 @@
   transition: all 100ms ease-out;
 }
 .button:disabled{
-  background: silver;
+  background: rgb(225, 223, 223);
   cursor: not-allowed;
 }
 .button:hover {

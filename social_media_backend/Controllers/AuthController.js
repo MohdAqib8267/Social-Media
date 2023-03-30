@@ -1,37 +1,40 @@
 import UserModel from "../Models/userModel.js";
  import bcrypt from "bcrypt";
-
+ import  jwt  from "jsonwebtoken";
+ import dotenv from 'dotenv';
+ dotenv.config();
+// console.log(process.env.JWT_KEY); 
 // Registering a new User
 export const registerUser = async (req, res) => {
 
 //   const user = new UserModel(req.body);
 //   const result= await user.save();
 //   res.send(result);
-  const { username, password, firstname, lastname } = req.body;
+ 
 
   const salt = await bcrypt.genSalt(10);
-  const hashedPass = await bcrypt.hash(password, salt);
-
-  const newUser = new UserModel({
-    username,
-    password: hashedPass,
-    firstname,
-    lastname,
-  });
-
+  const hashedPass = await bcrypt.hash(req.body.password, salt);
+  req.body.password = hashedPass
+  const newUser = new UserModel(req.body);
+  const {username} = req.body
   try {
-    const oldUsername = await UserModel.findOne({username:username});
+    const oldUsername = await UserModel.findOne({username});
     if(oldUsername){
-      res.status(400).json('user already exists!');
+      return res.status(400).json({message:'username is already exists!'});
       // console.log('user already exists');
     }
     
-    await newUser.save();
-    res.status(200).json(newUser);
+    const user = await newUser.save();
+    
+    const token = jwt.sign({
+      username:user.username, id:user._id
+    },process.env.JWT_KEY,{expiresIn:'7h'});
+
+    return res.status(200).json({newUser,token});
     
     
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -50,7 +53,16 @@ export const loginUser = async (req, res) => {
             const validity = await bcrypt.compare(password, user.password)
 
 
-            validity? res.status(200).json(user): res.status(400).json("Wrong Password")
+            // validity? res.status(200).json(user): res.status(400).json("Wrong Password")
+            if(!validity){
+              res.status(400).json("Wrong Password!");
+            }
+            else{
+              const token = jwt.sign({
+                username:user.username, id:user._id
+              },process.env.JWT_KEY,{expiresIn:'7h'});
+              res.status(200).json({user,token});
+            }
         }
         else{
             res.status(404).json("User does not exists")
