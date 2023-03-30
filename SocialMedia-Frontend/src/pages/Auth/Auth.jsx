@@ -15,7 +15,7 @@ const Auth = () => {
     confirmpass: "",
   };
   const dispatch = useDispatch();
-  const user = useSelector((state)=>state.userReducer);
+  const user = useSelector((state)=>state.user);
   //console.log(user.isFetching);
   const [data, setData] = useState(initialState);
   const [confirmpass,setConfermpass] = useState(true);

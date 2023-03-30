@@ -12,14 +12,13 @@ import { useSelector } from "react-redux";
 const PostShare = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
-  const user = useSelector((state)=>state.userReducer.currentUser);
+  const desc = useRef();
+  const user = useSelector((state)=>state.user.currentUser);
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      setImage({
-        image: URL.createObjectURL(img),
-      });
+      setImage(img);
     }
   };
 
@@ -27,7 +26,17 @@ const PostShare = () => {
     e.preventDefault();
 
     const newPost = {
+      userId: user.user._id,
+      desc:desc.current.value,
       
+    }
+    if(image){
+      const data = new FormData();
+      const filename = Date.now() + image.name;
+      data.append("name",filename);
+      data.append("file",image);
+      newPost.image = filename
+      console.log(newPost);
     }
 
   }
@@ -35,7 +44,7 @@ const PostShare = () => {
     <div className="PostShare">
       <img src={ProfileImage} alt="" />
       <div>
-        <input type="text" placeholder="What's happening" />
+        <input type="text" ref={desc} required placeholder="What's happening" />
         <div className="postOptions">
           <div className="option" style={{ color: "var(--photo)" }}
           onClick={()=>imageRef.current.click()}
@@ -69,7 +78,7 @@ const PostShare = () => {
 
         <div className="previewImage">
           <UilTimes onClick={()=>setImage(null)}/>
-          <img src={image.image} alt="" />
+          <img src={URL.createObjectURL(image)} alt="" />
         </div>
 
       )}
