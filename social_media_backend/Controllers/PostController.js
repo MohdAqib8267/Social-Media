@@ -10,8 +10,8 @@ export const createPost = async(req,res)=>{
   
    
     try {
-        await newPost.save();
-        res.status(200).json("Post Created!");
+       const result= await newPost.save();
+        res.status(200).json(result);
     } catch (error) {
         req.status(500).json(error);
         

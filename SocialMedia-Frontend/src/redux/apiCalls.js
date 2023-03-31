@@ -1,6 +1,8 @@
 import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess } from "./userSlice";
+import { addPostFailure,addPostSuccess,addPostStart } from "./postSlice";
 import axios from "axios";
 
+//login
 export const login =async(dispatch,data)=>{
     dispatch(loginStart());
     try {
@@ -16,7 +18,7 @@ export const login =async(dispatch,data)=>{
         dispatch(loginFailure());
     }
 }
-
+//register
 export const signup =async(dispatch,data)=>{
     dispatch(signupStart());
     try {
@@ -24,5 +26,18 @@ export const signup =async(dispatch,data)=>{
         dispatch(signupSuccess(res.data));
     } catch (error) {
         dispatch(signupFailure());
+    }
+}
+
+//upload a post(belonging to postShare.jsx Component)
+export const uploadImg = async(dispatch,newPost)=>{
+    // console.log(newPost);
+    dispatch(addPostStart());
+    try {
+        const res = await axios.post("http://localhost:5000/post",newPost);
+        // console.log(res.data);
+        dispatch(addPostSuccess(res.data));
+    } catch (error) {
+        dispatch(addPostFailure());
     }
 }

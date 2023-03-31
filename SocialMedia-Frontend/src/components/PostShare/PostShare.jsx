@@ -7,14 +7,25 @@ import { UilLocationPoint } from "@iconscout/react-unicons";
 import { UilSchedule } from "@iconscout/react-unicons";
 import { UilTimes } from "@iconscout/react-unicons";
 import { useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
+import { uploadImg } from "../../redux/apiCalls";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { app } from "../../firebase";
 
 const PostShare = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
   const desc = useRef();
-  const user = useSelector((state)=>state.user.currentUser);
+  const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user.currentUser);
+  const loading = useSelector((state)=>state.post.isFetching);
+console.log(loading);
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
@@ -22,23 +33,58 @@ const PostShare = () => {
     }
   };
 
-  const handleSubmit=(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
+    // console.log(image.name);
+    const fileName = Date.now() + image.name;
+    const storage = getStorage(app);
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
 
-    const newPost = {
-      userId: user.user._id,
-      desc:desc.current.value,
-      
-    }
-    if(image){
-      const data = new FormData();
-      const filename = Date.now() + image.name;
-      data.append("name",filename);
-      data.append("file",image);
-      newPost.image = filename
-      console.log(newPost);
-    }
+    // Register three observers:
+    // 1. 'state_changed' observer, called any time the state changes
+    // 2. Error observer, called on failure
+    // 3. Completion observer, called on successful completion
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+          default:
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          // console.log("File available at", downloadURL);
+          // console.log({image:downloadURL,userId:user.user._id,desc:desc.current.value});
+          const newPost = {image:downloadURL,userId:user.user._id,desc:desc.current.value}
+          uploadImg(dispatch,newPost);
+          
+        });
+      }
+    );
+resetShare();
+    
+  };
 
+  const resetShare=()=>{
+    setImage(null);
+    desc.current.value="";
   }
   return (
     <div className="PostShare">
@@ -46,8 +92,10 @@ const PostShare = () => {
       <div>
         <input type="text" ref={desc} required placeholder="What's happening" />
         <div className="postOptions">
-          <div className="option" style={{ color: "var(--photo)" }}
-          onClick={()=>imageRef.current.click()}
+          <div
+            className="option"
+            style={{ color: "var(--photo)" }}
+            onClick={() => imageRef.current.click()}
           >
             <UilScenery />
             Photo
@@ -64,7 +112,9 @@ const PostShare = () => {
             <UilSchedule />
             Shedule
           </div>
-          <button className="button ps-button" onClick={handleSubmit} >Share</button>
+          <button className="button ps-button" disabled={loading} onClick={handleSubmit}>
+            {loading?"uploading...":"Share"}
+          </button>
           <div style={{ display: "none" }}>
             <input
               type="file"
@@ -74,16 +124,12 @@ const PostShare = () => {
             />
           </div>
         </div>
-      {image && (
-
-        <div className="previewImage">
-          <UilTimes onClick={()=>setImage(null)}/>
-          <img src={URL.createObjectURL(image)} alt="" />
-        </div>
-
-      )}
-
-
+        {image && (
+          <div className="previewImage">
+            <UilTimes onClick={() => setImage(null)} />
+            <img src={URL.createObjectURL(image)} alt="" />
+          </div>
+        )}
       </div>
     </div>
   );
