@@ -28,7 +28,7 @@ export const userSlice = createSlice({
         },
         signupSuccess:(state,action)=>{
             state.isFetching=false;
-            // console.log(action.payload);
+            console.log(action.payload);
             localStorage.setItem("profile",JSON.stringify(action.payload));
             state.currentUser=action.payload;
         },

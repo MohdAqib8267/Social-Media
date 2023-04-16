@@ -34,6 +34,7 @@ const Auth = () => {
 
     // }
     if(isSignup){
+      // console.log(data);
       data.password === data.confirmpass ? signup(dispatch,{data}) : setConfermpass(false);
 
     }

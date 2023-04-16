@@ -24,8 +24,8 @@ const PostShare = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.currentUser);
-  const loading = useSelector((state)=>state.post.isFetching);
-console.log(loading);
+  const {posts,isFetching} = useSelector((state)=>state.post);
+// console.log(loading);
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
@@ -72,7 +72,8 @@ console.log(loading);
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           // console.log("File available at", downloadURL);
           // console.log({image:downloadURL,userId:user.user._id,desc:desc.current.value});
-          const newPost = {image:downloadURL,userId:user.user._id,desc:desc.current.value}
+          const newPost = ({image:downloadURL,userId:user.user._id,desc:desc.current.value})
+          // console.log(desc.current.value);
           uploadImg(dispatch,newPost);
           
         });
@@ -112,8 +113,8 @@ resetShare();
             <UilSchedule />
             Shedule
           </div>
-          <button className="button ps-button" disabled={loading} onClick={handleSubmit}>
-            {loading?"uploading...":"Share"}
+          <button className="button ps-button" disabled={isFetching &&  posts.length !== 0} onClick={handleSubmit}>
+            {isFetching && posts.length !== 0?"uploading...":"Share"}
           </button>
           <div style={{ display: "none" }}>
             <input
