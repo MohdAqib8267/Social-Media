@@ -10,27 +10,19 @@ import axios from 'axios'
 
 
 const Post = ({data}) => {
-  // console.log(data.likes);
+  // console.log(data);
   const user = useSelector((state)=>state.user.currentUser);
   // console.log(user.user._id)
-  const [liked,setLiked] = useState(false);
+  const [liked,setLiked] = useState(data.likes.includes(user._id));
   const [likes,setLikes] = useState(data.likes.length);
 
-  useEffect(()=>{
-    const findLike =async()=>{
-      const res = await axios.get(`http://localhost:5000/post/${user.user._id}`);
-      console.log(res);
-    }
-    findLike();
-  },[])
-  const handleLiked =()=>{
-    setLiked((prev)=>!prev);
-    
-    {liked?setLikes((prev)=>prev-1): setLikes((prev)=>prev+1)};
 
-    //store in database, who likes post
-    likePosts(data._id,user.user._id);
+  const handleLiked=()=>{
+    likePosts(data._id,user.user._id)
+    setLiked((prev)=>!prev);
+    liked? setLikes((prev)=>prev-1): setLikes((prev)=>prev+1)
   }
+ 
   return (
     <div className="Post">
         <img src={data.image} alt="" />

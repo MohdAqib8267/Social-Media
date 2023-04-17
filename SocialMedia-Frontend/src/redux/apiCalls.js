@@ -73,5 +73,5 @@ export const getTimelinePosts = async(dispatch,id)=>{
 export const likePosts = async(id,userId)=>{
     // console.log(id,userId);
     const res= await axios.put(`http://localhost:5000/post/${id}/like`,{userId:userId});
-    console.log(res);
+    // console.log(res);
 }
