@@ -1,9 +1,9 @@
-import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess } from "./userSlice";
+import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess,logoutSuccess } from "./userSlice";
 import { addPostFailure,addPostSuccess,addPostStart,retreivePostStart,retreivePostFailure, retreivePostSuccess } from "./postSlice";
 
 import axios from "axios";
 
-//login
+//login 
 export const login =async(dispatch,data)=>{
     dispatch(loginStart());
     try {
@@ -74,4 +74,11 @@ export const likePosts = async(id,userId)=>{
     // console.log(id,userId);
     const res= await axios.put(`http://localhost:5000/post/${id}/like`,{userId:userId});
     // console.log(res);
+}
+
+
+//logout
+export const logOut = async(dispatch) =>{
+   dispatch(logoutSuccess());
+   
 }

@@ -16,20 +16,11 @@ const ProfileCard = ({location}) => {
     <div className="ProfileCard">
       <div className="ProfileImages">
       <img src={coverImage ? URL.createObjectURL(coverImage) : Cover} alt="" />
-      <input
-    id="coverImageInput"
-    type="file"
-    accept="image/*"
-    onChange={(e) => setCoverImage(e.target.files[0])}
-  />
+      
+  
       <img src={profileImage ? URL.createObjectURL(profileImage) : Profile} alt="" />
 
-      <input
-    id="profileImageInput"
-    type="file"
-    accept="image/*"
-    onChange={(e) => setProfileImage(e.target.files[0])}
-  />
+    
       </div>
 
       <div className="ProfileName">

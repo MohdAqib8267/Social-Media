@@ -28,7 +28,7 @@ export const userSlice = createSlice({
         },
         signupSuccess:(state,action)=>{
             state.isFetching=false;
-            console.log(action.payload);
+            // console.log(action.payload);
             localStorage.setItem("profile",JSON.stringify(action.payload));
             state.currentUser=action.payload;
         },
@@ -36,6 +36,16 @@ export const userSlice = createSlice({
             state.error=true;
             state.isFetching=false;
         },
+        // logout
+        
+        logoutSuccess:(state)=>{
+            
+            state.currentUser="";
+            state.isFetching=false;
+            state.error=false;
+            localStorage.clear();
+        },
+       
     }
 }) 
 
@@ -46,6 +56,7 @@ export const {
     signupStart,
     signupSuccess,
     signupFailure,
+    logoutSuccess,
 } =userSlice.actions;
 
 export default userSlice.reducer;
