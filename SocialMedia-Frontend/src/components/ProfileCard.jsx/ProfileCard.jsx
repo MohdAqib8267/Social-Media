@@ -11,14 +11,15 @@ const ProfileCard = ({location}) => {
   const post = useSelector((state)=>state.post);
   const [coverImage, setCoverImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  // console.log(user.user.coverPicture);
   const ProfilePage = false;
   return (
     <div className="ProfileCard">
       <div className="ProfileImages">
-      <img src={coverImage ? URL.createObjectURL(coverImage) : Cover} alt="" />
+      <img src={user.user.coverPicture ? user.user.coverPicture : Cover} alt="" />
       
   
-      <img src={profileImage ? URL.createObjectURL(profileImage) : Profile} alt="" />
+      <img src={user.user.profilePicture ? user.user.profilePicture : Profile} alt="" />
 
     
       </div>

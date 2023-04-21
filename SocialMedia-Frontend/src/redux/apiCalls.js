@@ -1,4 +1,4 @@
-import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess,logoutSuccess } from "./userSlice";
+import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess,logoutSuccess,userUpdateStart,userUpdateSuccess,userUpdateFailure } from "./userSlice";
 import { addPostFailure,addPostSuccess,addPostStart,retreivePostStart,retreivePostFailure, retreivePostSuccess } from "./postSlice";
 
 import axios from "axios";
@@ -81,4 +81,17 @@ export const likePosts = async(id,userId)=>{
 export const logOut = async(dispatch) =>{
    dispatch(logoutSuccess());
    
+}
+
+//updateUser
+export const updateUser = async(dispatch,id,userData)=>{
+    // console.log({userId,userData})
+    dispatch(userUpdateStart());
+    try {
+        const res = await axios.put(`http://localhost:5000/user/${id}`,userData)
+        // console.log(res.data);
+        dispatch(userUpdateSuccess(res.data));
+    } catch (error) {
+        dispatch(userUpdateFailure());
+    }
 }

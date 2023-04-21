@@ -89,7 +89,7 @@ resetShare();
   }
   return (
     <div className="PostShare">
-      <img src={ProfileImage} alt="" />
+      <img src={user.user.profilePicture?user.user.profilePicture: ProfileImage} alt="" />
       <div>
         <input type="text" ref={desc} required placeholder="What's happening" />
         <div className="postOptions">

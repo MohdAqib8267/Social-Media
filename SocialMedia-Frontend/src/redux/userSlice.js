@@ -46,6 +46,20 @@ export const userSlice = createSlice({
             localStorage.clear();
         },
        
+        //user Update
+        userUpdateStart:(state)=>{
+            state.isFetching=true;
+        },
+        userUpdateSuccess:(state,action)=>{
+            state.isFetching=false;
+            // console.log(action.payload);
+            localStorage.setItem("profile",JSON.stringify(action.payload));
+            state.currentUser=action.payload;
+        },
+        userUpdateFailure:(state)=>{
+            state.error=true;
+            state.isFetching=false;
+        },
     }
 }) 
 
@@ -57,6 +71,9 @@ export const {
     signupSuccess,
     signupFailure,
     logoutSuccess,
+    userUpdateStart,
+    userUpdateFailure,
+    userUpdateSuccess,
 } =userSlice.actions;
 
 export default userSlice.reducer;
