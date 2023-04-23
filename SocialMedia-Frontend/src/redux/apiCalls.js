@@ -1,4 +1,4 @@
-import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess,logoutSuccess,userUpdateStart,userUpdateSuccess,userUpdateFailure } from "./userSlice";
+import { loginStart,loginSuccess,loginFailure,signupStart,signupFailure,signupSuccess,logoutSuccess,userUpdateStart,userUpdateSuccess,userUpdateFailure, followStart,followFailure,followSuccess,unfollowStart,unfollowFailure,unfollowSuccess} from "./userSlice";
 import { addPostFailure,addPostSuccess,addPostStart,retreivePostStart,retreivePostFailure, retreivePostSuccess } from "./postSlice";
 
 import axios from "axios";
@@ -93,5 +93,31 @@ export const updateUser = async(dispatch,id,userData)=>{
         dispatch(userUpdateSuccess(res.data));
     } catch (error) {
         dispatch(userUpdateFailure());
+    }
+}
+
+
+//follow user
+export const followUser =async(dispatch,personId,data)=>{
+    // console.log(personId,data);
+    dispatch(followStart());
+    try {
+        const res = await axios.put(`http://localhost:5000/user/${personId}/follow`,data);
+        // console.log(res.data);
+        dispatch(followSuccess(res.data));  
+    } catch (error) {
+        dispatch(followFailure());
+    }
+}
+//unfollow user
+export const unfollowUser =async(dispatch,personId,data)=>{
+    // console.log(personId,data);
+    dispatch(unfollowStart());
+    try {
+        const res = await axios.put(`http://localhost:5000/user/${personId}/unfollow`,data);
+        // console.log(res.data);
+        dispatch(unfollowSuccess(res.data));  
+    } catch (error) {
+        dispatch(unfollowFailure());
     }
 }

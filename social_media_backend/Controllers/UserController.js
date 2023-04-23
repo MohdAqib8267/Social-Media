@@ -83,24 +83,27 @@ export const deleteUser = async(req,res)=>{
 
 //Followers User
 export const followUser = async(req,res)=>{
-  const id = req.params.id;
+ 
+  const id = req.params.id;//jisko karna hai
 
-  const {currentUserId} = req.body;
-
-  if(id === currentUserId){
+  const {_id} = req.body; //jo kar rha hai
+//  console.log(req.body);
+  if(id === _id){
     //if user wants to follow himself/herself
     res.status(403).json("Action Forbidden!");
   }
   else{
     try{
       const followUser = await UserModel.findById(id);
-      const followingUser = await UserModel.findById(currentUserId);
-
+      const followingUser = await UserModel.findById(_id);
+      
       //check if what it is already followed?
-      if (!followUser.followers.includes(currentUserId)) {
-        await followUser.updateOne({ $push: { followers: currentUserId } });
+      if (!followUser.followers.includes(_id)) {
+        await followUser.updateOne({ $push: { followers: _id } });
         await followingUser.updateOne({ $push: { following: id } });
-        res.status(200).json("User followed!");
+        // console.log({followUser,followingUser});
+        // res.status(200).json("User followed!");
+        res.status(200).json({followUser,followingUser});
       } else {
         res.status(403).json("User is Already followed by you");
       }
@@ -115,21 +118,22 @@ export const followUser = async(req,res)=>{
 export const unFollowUser = async(req,res)=>{
   const id = req.params.id;
 
-  const {currentUserId} = req.body;
+  const {_id} = req.body;
 
-  if(id === currentUserId){
+  if(id === _id){
     //it is not unfollowed itself
     res.status(403).json("Action Forbidden");
   }
   else{
     try {
       const followUser = await UserModel.findById(id);
-      const followingUser = await UserModel.findById(currentUserId);
-
-      if (followUser.followers.includes(currentUserId)) {
-        await followUser.updateOne({ $pull: { followers: currentUserId } });
+      const followingUser = await UserModel.findById(_id);
+      // console.log(followUser);
+      if (followUser.followers.includes(_id)) {
+        await followUser.updateOne({ $pull: { followers: _id } });
         await followingUser.updateOne({ $pull: { following: id } });
-        res.status(200).json("User Unfollowed!");
+        // res.status(200).json("User Unfollowed!");
+        res.status(200).json({followUser,followingUser});
       }
       else{
         res.status(403).json("user is not followed by you!");
@@ -139,3 +143,19 @@ export const unFollowUser = async(req,res)=>{
     }
   }
 };
+
+
+//get All Users
+export const getAllUsers =async(req,res)=>{
+  try {
+    let users = await UserModel.find();
+    users = users.map((user)=>{
+      const {password,...otherDetails}=user._doc
+      return otherDetails;
+    })
+    res.status(200).json(users);
+    
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}

@@ -5,15 +5,17 @@ import Post from '../Post/Post'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { getTimelinePosts } from '../../redux/apiCalls'
+import { useParams } from "react-router-dom";
 
 const Posts = () => {
+  const params = useParams()
   const dispatch = useDispatch();
   const user = useSelector((state)=>state.user.currentUser);
   // console.log(user.newUser._id); 
-  const {posts,isFetching} = useSelector((state)=>state.post);
+  let {posts,isFetching} = useSelector((state)=>state.post);
   
   // reverse the posts array
-  const reversedPosts = posts.slice().reverse();
+  let reversedPosts = posts.slice().reverse();
 
   
   
@@ -24,7 +26,9 @@ const Posts = () => {
     }
     fetchData();
   }, [user.user._id]);
-  if(posts.length == 0) return 'No Posts';
+
+  if(!reversedPosts) return 'No Posts';
+  if(params.id) reversedPosts = reversedPosts.filter((post)=> post.userId===params.id)
   return (
     <div className="Posts">
         {isFetching?"Fetching Posts...":reversedPosts.map((post, id)=>{
