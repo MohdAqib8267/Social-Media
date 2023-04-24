@@ -87,7 +87,7 @@ export const followUser = async(req,res)=>{
   const id = req.params.id;//jisko karna hai
 
   const {_id} = req.body; //jo kar rha hai
-//  console.log(req.body);
+//  console.log(req.headers.authorization.split(" ")[1]);
   if(id === _id){
     //if user wants to follow himself/herself
     res.status(403).json("Action Forbidden!");
