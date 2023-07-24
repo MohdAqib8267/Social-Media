@@ -32,14 +32,14 @@ export const signup =async(dispatch,data)=>{
 }
 
 //get token
-const token = JSON.parse(localStorage.getItem("profile")).token;
-// console.log(token);
+// const token = JSON.parse(localStorage.getItem("profile")).token;
+// // console.log(token);
 
-const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+// const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
 
 //upload a post(belonging to postShare.jsx Component)
 export const uploadImg = async(dispatch,newPost)=>{
@@ -102,7 +102,7 @@ export const followUser =async(dispatch,personId,data)=>{
     // console.log(personId,data);
     dispatch(followStart());
     try {
-        const res = await axios.put(`http://localhost:5000/user/${personId}/follow`,data,config);
+        const res = await axios.put(`http://localhost:5000/user/${personId}/follow`,data); //here config
         // console.log(res.data);
         dispatch(followSuccess(res.data));  
     } catch (error) {
