@@ -1,0 +1,10 @@
+{
+    "node":2,
+    "name":"node-js",
+    "build":[
+        {"src":"index.js","use":"vercel/node"}
+    ],
+    "routes":[
+        {"src":"/(.*)", "dest":"/"}
+    ]
+}

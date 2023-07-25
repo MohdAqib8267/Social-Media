@@ -12,7 +12,7 @@ export const login =async(dispatch,data)=>{
         //     username:"admin",
         //     password:"admin"
         // }
-        const res = await axios.post("http://localhost:5000/auth/login",data.data);
+        const res = await axios.post("https://social-media-feista-fu59.vercel.app//auth/login",data.data);
         // console.log(res);
         dispatch(loginSuccess(res.data));
     } catch (error) {
@@ -24,7 +24,7 @@ export const signup =async(dispatch,data)=>{
     // console.log(data);
     dispatch(signupStart());
     try {
-        const res = await axios.post("http://localhost:5000/auth/register",data.data);
+        const res = await axios.post("https://social-media-feista-fu59.vercel.app/auth/register",data.data);
         dispatch(signupSuccess(res.data));
     } catch (error) {
         dispatch(signupFailure());
